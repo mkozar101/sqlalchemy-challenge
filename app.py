@@ -39,10 +39,10 @@ def welcome():
     return (
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation<br/>"
-        f"/api/v1.0/stations<br/>"
+        f"/api/v1.0/station<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
-        f"/api/v1.0/<start>/<end><br/>"
+        f"/api/v1.0/start_date<br/>"
+        f"/api/v1.0/start_date/end_date<br/>"
 
         f"NOTE: when querying dates, use format YYYY-MM-DD"
     )
@@ -53,7 +53,7 @@ def precipitation():
     session = Session(engine)
 
     #query all precipitation data
-    results = session.query(measurement.date, measurement.prcp).all()
+    results = session.query(measurement.date, measurement.prcp).filter(func.date(measurement.date)>= '2016-08-23').all()
 
     #close out the session
     session.close()
@@ -100,7 +100,7 @@ def tobs():
     session = Session(engine)
 
     #where temperature data for station with highest number of observations
-    results = session.query(measurement.date,measurement.tobs).filter(measurement.station == 'USC00519281').filter(func.date(measurement.date)> '2016-08-23').all()
+    results = session.query(measurement.date,measurement.tobs).filter(measurement.station == 'USC00519281').filter(func.date(measurement.date)>= '2016-08-23').all()
     #.filter(func.date(measure.date)>'2018-08-23')
     all_tobs = []
 
